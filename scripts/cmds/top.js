@@ -1,43 +1,169 @@
 module.exports = {
+
   config: {
-    name: "richest",
-    aliases: ["top"],
-    version: "1.0",
-    author: "Aryan Chauhan",
-    countDown: 5,
-    shortDescription: { en: "Show top richest users" },
-    longDescription: {
-      en: "Displays a leaderboard of users with the highest money balance.",
-    },
+
+    name: "top",
+
+    version: "1.1",
+
+    author: "Shikaki",
+
     category: "GAME",
-  },
 
-  langs: {
-    en: {
-      title: "💸 Top Richest Users 💸",
-      no_data: "No users found with money data.",
-      list: "%1. %2 - $%3",
+    shortDescription: {
+
+      vi: "Xem 10 người giàu nhất",
+
+      en: "View the top 10 richest people",
+
     },
+
+    longDescription: {
+
+      vi: "Xem danh sách 10 người giàu nhất trong nhóm",
+
+      en: "View the list of the top 10 richest people in the group",
+
+    },
+
+    guide: {
+
+      en: "{pn} 1\n{pn} 50\n{pn} 100",
+
+    },
+
+    role: 0,
+
   },
 
-  onStart: async function ({ usersData, message, getLang }) {
-    const allUsers = await usersData.getAll();
 
-    const usersWithMoney = allUsers
-      .filter(user => user.money && user.money > 0)
-      .sort((a, b) => b.money - a.money)
-      .slice(0, 10);
 
-    if (usersWithMoney.length === 0) {
-      return message.reply(getLang("no_data"));
+  onStart: async function ({ message, usersData, args, api }) {
+
+    // Get all users' data
+
+    const allUserData = await usersData.getAll();
+
+
+
+    // Filter out users with invalid money values and sort by money in descending order
+
+    const sortedUsers = allUserData
+
+      .filter((user) => !isNaN(user.money))
+
+      .sort((a, b) => b.money - a.money);
+
+
+
+    let msg = "👑 | 𝐓𝐨𝐩 𝟏𝟓 𝐑𝐢𝐜𝐡𝐞𝐬𝐭 𝐔𝐬𝐞𝐫𝐬:\n \n";
+
+
+
+    if (args[0] === "top") {
+
+      // Display the richest person
+
+      if (sortedUsers.length > 0) {
+
+        const richestUser = sortedUsers[0];
+
+        const formattedBalance = formatNumberWithFullForm(richestUser.money);
+
+        msg += `1. ${richestUser.name}: $ ${formattedBalance}\n`;
+
+      } else {
+
+        msg += "No users found.\n";
+
+      }
+
+    } else {
+
+      // Default: Display the top 10 richest people
+
+      const topCount = Math.min(parseInt(args[0]) || 10, sortedUsers.length);
+
+      sortedUsers.slice(0, topCount).forEach((user, index) => {
+
+        const formattedBalance = formatNumberWithFullForm(user.money);
+
+        msg += `${index + 1}. ${user.name}: $ ${formattedBalance}\n`;
+
+      });
+
     }
 
-    let msg = `\n${getLang("title")}\n\n`;
-    usersWithMoney.forEach((user, index) => {
-      const userName = user.name || `User ${index + 1}`;
-      msg += getLang("list", index + 1, userName, user.money) + "\n";
-    });
 
-    return message.reply(msg.trim());
+
+    msg += "";
+
+
+
+    message.reply(msg);
+
   },
+
 };
+
+
+
+// Function to format a number with full forms (e.g., 1 Thousand, 133 Million, 76.2 Billion)
+
+function formatNumberWithFullForm(number) {
+
+  const fullForms = [
+
+    "",
+
+    "𝐊",
+
+    "𝐌",
+
+    "𝐁",
+
+    "Trillion",
+
+    "Quadrillion",
+
+    "Quintillion",
+
+    "Hextillion",
+
+    "Heptillion",
+
+    "Octillion",
+
+    "Nonillion",
+
+    "Decillion",
+
+  ];
+
+
+
+  // Calculate the full form of the number (e.g., Thousand, Million, Billion)
+
+  let fullFormIndex = 0;
+
+  while (number >= 1000 && fullFormIndex < fullForms.length - 1) {
+
+    number /= 1000;
+
+    fullFormIndex++;
+
+  }
+
+
+
+  // Format the number with two digits after the decimal point
+
+  const formattedNumber = number.toFixed(2);
+
+
+
+  // Add the full form to the formatted number
+
+  return `${formattedNumber} ${fullForms[fullFormIndex]}`;
+
+}
