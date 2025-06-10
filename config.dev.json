@@ -16,7 +16,7 @@
     "enable": false,
     "ignoreCommand": []
   },
-  "authorName": "Mr_Arafat",
+  "authorName": "TARIF AHMED",
   "authorFB": "https://www.facebook.com/profile.php?id=100090111009775&mibextid=ZbWKwL",
   "API": {
     "DIPTO": "https://noobs-api.onrender.com/dipto",
@@ -24,7 +24,7 @@
     "RUBISH": "https://rubish-apihub.onrender.com/rubish"
   },
   "nickNameBot": "ARAFAT-BOT-404",
-  "prefix": "!",
+  "prefix": "👨🏿‍🌾",
   "vipUser": [
     "100081491574719",
     "61552422054139",
@@ -42,6 +42,10 @@
     "100081491574719",
     "61552422054139"
   ],
+   "tarifBot": [
+     "28299296482990983"
+	],
+  "notes": "YOUR GROUP ID or Tid ID SET NOW , BECAUSE BOT LOGS MESSAGE SENT YOUR GROUP",
   "rubishapi": "https://rubish-apihub.onrender.com/rubish",
   "diptoapi": "https://d1pt0-call-bomber.onrender.com/dipto?",
   "GOD": [
